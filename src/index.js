@@ -30,7 +30,7 @@ mongoose
     console.error("connection failed", err);
   });
 
-// routes
+// routes here
 app.use("/api/v1/", appRouter);
 
 app.get("/", (req, res) => {
