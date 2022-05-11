@@ -21,6 +21,7 @@ const verifyToken = async (req, res, next) => {
       }
       const { _id } = payload;
       userModel.findById(_id).then((userdata) => {
+        // const { password, ...otherData } = userdata._doc;
         req.user = userdata;
 
         next();
