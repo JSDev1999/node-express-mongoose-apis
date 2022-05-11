@@ -13,7 +13,7 @@ const PostSchema = new Mongoose.Schema(
     },
     likes: [
       {
-        type: String,
+        type: ObjectId,
         ref: "users",
       },
     ],

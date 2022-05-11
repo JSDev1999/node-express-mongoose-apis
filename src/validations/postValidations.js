@@ -14,3 +14,16 @@ export const updatePostSchema = Joi.object({
 export const deletePostSchema = Joi.object({
   _id: Joi.string().trim().required(),
 });
+
+export const getPostSchema = Joi.object({
+  _id: Joi.string().trim().required(),
+});
+
+export const likePostSchema = Joi.object({
+  _id: Joi.string().trim().required(),
+});
+
+export const addCommentSchema = Joi.object({
+  postId: Joi.string().trim().required(),
+  text: Joi.string().trim().required(),
+});
