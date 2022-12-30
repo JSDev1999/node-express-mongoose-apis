@@ -3,11 +3,16 @@ const ObjectId = Mongoose.Schema.Types.ObjectId;
 
 const PostSchema = new Mongoose.Schema(
   {
-    desc: {
+    title: {
       type: String,
       required: true,
     },
-    photo: {
+    message: {
+      type: String,
+      required: true,
+    },
+    tags: [String],
+    file: {
       type: String,
       required: true,
     },

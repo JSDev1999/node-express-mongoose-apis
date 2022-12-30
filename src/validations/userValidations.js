@@ -1,8 +1,8 @@
 import Joi from "joi";
 
 export const registerUserSchema = Joi.object({
-  firstName: Joi.string().trim().min(4).required(),
-  lastName: Joi.string().trim().min(4).required(),
+  fullName: Joi.string().trim().min(4).required(),
+  userName: Joi.string().trim().min(4).required(),
   email: Joi.string().email().trim().required(),
   password: Joi.string().trim().min(6).required(),
 });

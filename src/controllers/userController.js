@@ -86,22 +86,22 @@ const loginUser = async (req, res) => {
             );
         } else {
           return res
-            .status(HttpStatus.OK.code)
+            .status(HttpStatus.BAD_REQUEST.code)
             .json(
               new Response(
-                HttpStatus.OK.code,
-                HttpStatus.OK.status,
+                HttpStatus.BAD_REQUEST.code,
+                HttpStatus.BAD_REQUEST.status,
                 "Invalid Credentials"
               )
             );
         }
       } else {
         return res
-          .status(HttpStatus.OK.code)
+          .status(HttpStatus.BAD_REQUEST.code)
           .json(
             new Response(
-              HttpStatus.OK.code,
-              HttpStatus.OK.status,
+              HttpStatus.BAD_REQUEST.code,
+              HttpStatus.BAD_REQUEST.status,
               "Invalid Credentials"
             )
           );
@@ -109,9 +109,13 @@ const loginUser = async (req, res) => {
     }
   } catch (error) {
     return res
-      .status(HttpStatus.OK.code)
+      .status(HttpStatus.BAD_REQUEST.code)
       .json(
-        new Response(HttpStatus.OK.code, HttpStatus.OK.status, error.message)
+        new Response(
+          HttpStatus.BAD_REQUEST.code,
+          HttpStatus.BAD_REQUEST.status,
+          error.message
+        )
       );
   }
 };
@@ -148,9 +152,13 @@ const getUserData = async (req, res, next) => {
       });
   } catch (error) {
     return res
-      .status(HttpStatus.OK.code)
+      .status(HttpStatus.BAD_REQUEST.code)
       .json(
-        new Response(HttpStatus.OK.code, HttpStatus.OK.status, error.message)
+        new Response(
+          HttpStatus.BAD_REQUEST.code,
+          HttpStatus.BAD_REQUEST.status,
+          error.message
+        )
       );
   }
 };

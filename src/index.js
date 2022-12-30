@@ -1,20 +1,24 @@
-import express from "express";
+import http from "http";
+import Express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 
-// inititalization
+// let initalize the app
+const app = Express();
+const server = http.createServer(app);
 dotenv.config();
-const app = express();
-const port = process.env.PORT;
+let port = process.env.PORT ?? 5055;
 
 // middlewares
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: false }));
 
-// connect to db
+// routes here
+
+mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -22,15 +26,14 @@ mongoose
   })
   .then(() => {
     console.info("DB connected");
-    app.listen(port, () => {
-      console.log("connected to port", +port);
+    server.listen(port, (res, err) => {
+      console.log("api running on port", `http://localhost:${port}`);
     });
   })
   .catch((err) => {
     console.error("connection failed", err);
   });
 
-// routes here
 app.use("/api/v1/", appRouter);
 
 app.get("/", (req, res) => {

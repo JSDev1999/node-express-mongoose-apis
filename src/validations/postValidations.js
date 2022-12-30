@@ -1,8 +1,10 @@
 import Joi from "joi";
 
 export const createPostSchema = Joi.object({
-  desc: Joi.string().trim(),
-  photo: Joi.string().trim().min(10).required(),
+  title: Joi.string().trim(),
+  message: Joi.string().trim(),
+  tags: Joi.string().trim(),
+  file: Joi.string().trim().min(10).required(),
 });
 
 export const updatePostSchema = Joi.object({
