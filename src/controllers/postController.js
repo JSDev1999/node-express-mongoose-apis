@@ -1,6 +1,8 @@
 import HttpErrors from "http-errors";
 import { HttpStatus, Response } from "../helpers/Response.js";
 import postModel from "../models/postModel.js";
+import cloudinary from "cloudinary";
+import * as Formidable from "formidable";
 import {
   addCommentSchema,
   createPostSchema,
@@ -9,6 +11,57 @@ import {
   likePostSchema,
   updatePostSchema,
 } from "../validations/postValidations.js";
+
+cloudinary.v2.config({
+  cloud_name: "dwubleiau",
+  api_key: "388565738463438",
+  api_secret: "7prPCZ2UfNxrIsY5gSjeezmw820",
+});
+
+export const uploadImage = async (req, res, next) => {
+  console.log("file here", req.files);
+
+  try {
+    const file = await req.files.image;
+    await cloudinary.v2.uploader
+      .upload(file.tempFilePath)
+      .then(async (result) => {
+        console.log("photo", result);
+
+        return res
+          .status(HttpStatus.OK.code)
+          .json(
+            new Response(
+              HttpStatus.OK.code,
+              HttpStatus.OK.status,
+              "Image Uploaded",
+              result?.url
+            )
+          );
+      })
+      .catch((error) => {
+        return res
+          .status(HttpStatus.BAD_REQUEST.code)
+          .json(
+            new Response(
+              HttpStatus.BAD_REQUEST.code,
+              HttpStatus.BAD_REQUEST.status,
+              error.message
+            )
+          );
+      });
+  } catch (error) {
+    return res
+      .status(HttpStatus.BAD_REQUEST.code)
+      .json(
+        new Response(
+          HttpStatus.BAD_REQUEST.code,
+          HttpStatus.BAD_REQUEST.status,
+          error.message
+        )
+      );
+  }
+};
 
 export const createPost = async (req, res, next) => {
   try {
@@ -49,7 +102,7 @@ export const getAllPosts = async (req, res, next) => {
     if (req.query) {
       await postModel
         .find({ postById: req.query })
-        .populate("postedBy", "_id firstName lastName profile_image")
+        .populate("postedBy", "_id fullName userName profile_image")
         .then((results) => {
           res
             .status(HttpStatus.OK.code)
@@ -94,10 +147,11 @@ export const getAllPosts = async (req, res, next) => {
 
 export const getSinglePost = async (req, res, next) => {
   try {
+    console.log(req.query);
     await postModel
-      .find(req.query)
-      .populate("postedBy", "_id firstName lastName profile_image")
-      .populate("likes", "_id firstName lastName profile_image")
+      .findById({ _id: req.query?.postId })
+      .populate("postedBy", "_id fullName userName profile_image")
+      .populate("likes", "_id fullName userName profile_image")
       .then((results) => {
         res
           .status(HttpStatus.OK.code)

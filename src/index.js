@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
+import fileUpload from "express-fileupload";
 
 // let initalize the app
 const app = Express();
@@ -15,6 +16,12 @@ let port = process.env.PORT ?? 5055;
 app.use(cors());
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: false }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    limits: { fileSize: 50 * 2024 * 1024 },
+  })
+);
 
 // routes here
 

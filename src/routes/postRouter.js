@@ -9,12 +9,14 @@ import {
   likePost,
   unLikePost,
   updateSinglePost,
+  uploadImage,
 } from "../controllers/postController.js";
 import { verifyToken } from "../middlewares/requireLogin.js";
 
 const postRouter = express.Router();
 
 postRouter.post("/create", verifyToken, createPost);
+postRouter.post("/imageupload", uploadImage);
 postRouter.get("/getall", verifyToken, getAllPosts);
 postRouter.get("/get/post", getSinglePost);
 postRouter.put("/update/post", verifyToken, updateSinglePost);
