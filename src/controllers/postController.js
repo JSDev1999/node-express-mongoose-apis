@@ -152,6 +152,7 @@ export const getSinglePost = async (req, res, next) => {
       .findById({ _id: req.query?.postId })
       .populate("postedBy", "_id fullName userName profile_image")
       .populate("likes", "_id fullName userName profile_image")
+      .populate("comments.postedBy", "_id fullName userName profile_image")
       .then((results) => {
         res
           .status(HttpStatus.OK.code)
@@ -338,9 +339,8 @@ export const addComment = async (req, res, next) => {
     } else {
       const comment = {
         text: value?.text,
-        postedBy: req.user?.firstName + " " + req.user?.lastName,
-        postById: req.user?._id,
-        profile: req.user?.profile_image,
+        postId: value?.postId,
+        postedBy: req.user?._id,
       };
       await postModel
         .findByIdAndUpdate(
@@ -357,7 +357,8 @@ export const addComment = async (req, res, next) => {
               new Response(
                 HttpStatus.OK.code,
                 HttpStatus.OK.status,
-                "Operation successfull"
+                "Operation successfull",
+                results
               )
             );
         });

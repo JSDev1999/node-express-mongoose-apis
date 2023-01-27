@@ -9,8 +9,9 @@ export const createPostSchema = Joi.object({
 
 export const updatePostSchema = Joi.object({
   _id: Joi.string().trim().required(),
-  desc: Joi.string().trim(),
-  photo: Joi.string().trim().min(10).required(),
+  title: Joi.string().trim().required(),
+  message: Joi.string().trim().required(),
+  file: Joi.string().trim().min(10).required(),
 });
 
 export const deletePostSchema = Joi.object({

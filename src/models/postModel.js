@@ -19,15 +19,15 @@ const PostSchema = new Mongoose.Schema(
     likes: [
       {
         type: ObjectId,
+        unique: true,
         ref: "users",
       },
     ],
     comments: [
       {
         text: String,
-        postedBy: String,
-        postById: String,
-        profile: String,
+        postedBy: { type: ObjectId, ref: "users" },
+        created: { type: Date, default: Date.now },
       },
     ],
     postedBy: {

@@ -24,12 +24,11 @@ postRouter.delete("/delete", verifyToken, deleteSinglePost);
 
 // get my posts
 postRouter.get("/getmyposts", verifyToken, getMyPosts);
-
 // like post
 postRouter.put("/likepost", verifyToken, likePost);
 // unlike post
 postRouter.put("/unlikepost", verifyToken, unLikePost);
-
 // add comment
-postRouter.post("/addcomment", verifyToken, addComment);
+postRouter.put("/addcomment", verifyToken, addComment);
+
 export default postRouter;
