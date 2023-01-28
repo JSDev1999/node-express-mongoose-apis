@@ -99,42 +99,31 @@ export const createPost = async (req, res, next) => {
 
 export const getAllPosts = async (req, res, next) => {
   try {
-    if (req.query) {
-      await postModel
-        .find({ postById: req.query })
-        .sort({ updatedAt: -1 })
-        .populate("postedBy", "_id fullName userName profile_image")
-        .then((results) => {
-          res
-            .status(HttpStatus.OK.code)
-            .json(
-              new Response(
-                HttpStatus.OK.code,
-                HttpStatus.OK.status,
-                "operation successfull",
-                results
-              )
-            );
-        });
-    } else {
-      await postModel
-        .find({})
-        .sort({ updatedAt: -1 })
-        .populate("postedBy", "_id firstName lastName profile_image")
-        .pretty()
-        .then((results) => {
-          res
-            .status(HttpStatus.OK.code)
-            .json(
-              new Response(
-                HttpStatus.OK.code,
-                HttpStatus.OK.status,
-                "operation successfull",
-                results
-              )
-            );
-        });
-    }
+    let page = req.query.page || 1;
+    let limit = 5;
+    let count = await postModel.count();
+    console.log("count", count);
+    await postModel
+      .find({})
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ updatedAt: -1 })
+      .populate("postedBy", "_id firstName lastName profile_image")
+      .exec()
+      .then((results) => {
+        res.status(HttpStatus.OK.code).json(
+          new Response(
+            HttpStatus.OK.code,
+            HttpStatus.OK.status,
+            "operation successfull",
+            {
+              data: results,
+              totlaPages: Math.ceil(count / limit),
+              currentPage: page,
+            }
+          )
+        );
+      });
   } catch (error) {
     return res
       .status(HttpStatus.MISSING_REQUEST.code)
