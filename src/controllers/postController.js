@@ -102,6 +102,7 @@ export const getAllPosts = async (req, res, next) => {
     if (req.query) {
       await postModel
         .find({ postById: req.query })
+        .sort({ updatedAt: -1 })
         .populate("postedBy", "_id fullName userName profile_image")
         .then((results) => {
           res
@@ -118,7 +119,9 @@ export const getAllPosts = async (req, res, next) => {
     } else {
       await postModel
         .find({})
+        .sort({ updatedAt: -1 })
         .populate("postedBy", "_id firstName lastName profile_image")
+        .pretty()
         .then((results) => {
           res
             .status(HttpStatus.OK.code)

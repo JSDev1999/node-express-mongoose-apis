@@ -6,6 +6,7 @@ import userModel from "../models/userModel.js";
 import {
   loginUserSchema,
   registerUserSchema,
+  updateUserSchema,
 } from "../validations/userValidations.js";
 
 // user register
@@ -24,7 +25,8 @@ const registerUser = async (req, res) => {
           .json(
             new Response(
               HttpStatus.ALREADY_EXISTS.code,
-              HttpStatus.ALREADY_EXISTS.status
+              HttpStatus.ALREADY_EXISTS.status,
+              "User Already Exists"
             )
           );
       } else {
@@ -162,4 +164,58 @@ const getUserData = async (req, res, next) => {
       );
   }
 };
-export { registerUser, loginUser, getUserData };
+
+const updateUserData = async (req, res, next) => {
+  try {
+    const { error, value } = await updateUserSchema.validate(req.body);
+    if (error) {
+      throw HttpErrors.Conflict(error.details[0].message);
+    } else {
+      const userId = req.params.id;
+      //console.log("yyy", req.params.id);
+      await userModel
+        .findByIdAndUpdate(
+          userId,
+          {
+            $set: value,
+          },
+          { new: true }
+        )
+        .then((resp) => {
+          const { password, ...others } = resp._doc;
+          return res
+            .status(HttpStatus.OK.code)
+            .json(
+              new Response(
+                HttpStatus.OK.code,
+                HttpStatus.OK.status,
+                "Details Updated",
+                others
+              )
+            );
+        })
+        .catch((error) => {
+          return res
+            .status(HttpStatus.OK.code)
+            .json(
+              new Response(
+                HttpStatus.OK.code,
+                HttpStatus.OK.status,
+                error.message
+              )
+            );
+        });
+    }
+  } catch (error) {
+    return res
+      .status(HttpStatus.BAD_REQUEST.code)
+      .json(
+        new Response(
+          HttpStatus.BAD_REQUEST.code,
+          HttpStatus.BAD_REQUEST.status,
+          error.message
+        )
+      );
+  }
+};
+export { registerUser, loginUser, getUserData, updateUserData };
