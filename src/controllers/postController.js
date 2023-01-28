@@ -108,8 +108,7 @@ export const getAllPosts = async (req, res, next) => {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ updatedAt: -1 })
-      .populate("postedBy", "_id firstName lastName profile_image")
-      .exec()
+      .populate("postedBy", "_id fullName userName profile_image")
       .then((results) => {
         res.status(HttpStatus.OK.code).json(
           new Response(

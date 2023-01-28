@@ -218,4 +218,45 @@ const updateUserData = async (req, res, next) => {
       );
   }
 };
-export { registerUser, loginUser, getUserData, updateUserData };
+
+const getAllUsers = async (req, res, next) => {
+  try {
+    await userModel
+      .find()
+      .select("-password")
+      .then((resp) => {
+        return res
+          .status(HttpStatus.OK.code)
+          .json(
+            new Response(
+              HttpStatus.OK.code,
+              HttpStatus.OK.status,
+              "operation successfull",
+              resp
+            )
+          );
+      })
+      .catch((error) => {
+        return res
+          .status(HttpStatus.OK.code)
+          .json(
+            new Response(
+              HttpStatus.OK.code,
+              HttpStatus.OK.status,
+              error.message
+            )
+          );
+      });
+  } catch (error) {
+    return res
+      .status(HttpStatus.BAD_REQUEST.code)
+      .json(
+        new Response(
+          HttpStatus.BAD_REQUEST.code,
+          HttpStatus.BAD_REQUEST.status,
+          error.message
+        )
+      );
+  }
+};
+export { registerUser, loginUser, getUserData, updateUserData, getAllUsers };
