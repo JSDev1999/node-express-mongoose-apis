@@ -2,7 +2,6 @@ import HttpErrors from "http-errors";
 import { HttpStatus, Response } from "../helpers/Response.js";
 import postModel from "../models/postModel.js";
 import cloudinary from "cloudinary";
-import * as Formidable from "formidable";
 import {
   addCommentSchema,
   createPostSchema,
@@ -19,15 +18,11 @@ cloudinary.v2.config({
 });
 
 export const uploadImage = async (req, res, next) => {
-  console.log("file here", req.files);
-
   try {
     const file = await req.files.image;
     await cloudinary.v2.uploader
       .upload(file.tempFilePath)
       .then(async (result) => {
-        console.log("photo", result);
-
         return res
           .status(HttpStatus.OK.code)
           .json(
@@ -49,6 +44,7 @@ export const uploadImage = async (req, res, next) => {
               error.message
             )
           );
+        next();
       });
   } catch (error) {
     return res
@@ -60,6 +56,7 @@ export const uploadImage = async (req, res, next) => {
           error.message
         )
       );
+    next();
   }
 };
 
